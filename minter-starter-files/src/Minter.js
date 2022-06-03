@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { connectWallet } from "./api/connectWallet";
+import { mintNFT } from "./api/mint";
 // import { getCurrentWalletConnected } from "./api/getCurrentConnectedWallet";
 import FileUploader from "./uploadImage";
 
@@ -79,6 +80,9 @@ const Minter = (props) => {
   const onMintPressed = async () => {
     console.log(walletAddress, name, fileUrl, description);
     //TODO: implement
+    setStatus("Your NFT is minting");
+    const { status } = await mintNFT(fileUrl, name, description);
+    setStatus(status);
   };
 
   const mintable = !!(fileUrl && walletAddress && name && description);

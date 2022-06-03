@@ -5,7 +5,7 @@ const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(alchemyKey);
 
 const contractABI = require("../contract-abi.json");
-const contractAddress = "0x4C4a07F737Bf57F6632B6CAB089B78f62385aCaE";
+const contractAddress = "0x64DA298bDd8200482b821951308eAc0732d3A5e8";
 
 export const mintNFT = async (url, name, description) => {
   //error handling
@@ -17,8 +17,7 @@ export const mintNFT = async (url, name, description) => {
   }
 
   //make metadata
-  const metadata = {name, image: url, description};
-
+  const metadata = { name, image: url, description };
 
   //pinata pin request
   const pinataResponse = await pinJSONToIPFS(metadata);
@@ -28,10 +27,14 @@ export const mintNFT = async (url, name, description) => {
       status: "😢 Something went wrong while uploading your tokenURI.",
     };
   }
+
+  console.log(pinataResponse);
   const tokenURI = pinataResponse.pinataUrl;
 
   //load smart contract
   window.contract = await new web3.eth.Contract(contractABI, contractAddress); //loadContract();
+
+  console.log(window.contract);
 
   //set up your Ethereum transaction
   const transactionParameters = {
@@ -42,6 +45,8 @@ export const mintNFT = async (url, name, description) => {
       .encodeABI(), //make call to NFT smart contract
   };
 
+  console.log(transactionParameters);
+
   //sign transaction via Metamask
   try {
     const txHash = await window.ethereum.request({
@@ -51,7 +56,7 @@ export const mintNFT = async (url, name, description) => {
     return {
       success: true,
       status:
-        "✅ Check out your transaction on Etherscan: https://ropsten.etherscan.io/tx/" +
+        "✅ Check out your transaction on Polygonscan: https://mumbai.polygonscan.com/tx/" +
         txHash,
     };
   } catch (error) {
